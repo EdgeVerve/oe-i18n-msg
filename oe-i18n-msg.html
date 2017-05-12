@@ -1,0 +1,230 @@
+<link rel="import" href="oe-i18n-msg-behavior.html">
+
+<!-- Copyright Eric Bidelman <ebidel@gmail.com> -->
+
+<!--
+`<i18n-msg>` is a client-side solution for i18n message string replacement. It is modeled off the [Chrome extension i18n API](https://developer.chrome.com/extensions/i18n), which uses a `messages.json` file format.
+The file contains localized strings for the language in question.
+
+To set the language across your site, define `I18nMsg.lang` in your main page:
+
+    document.addEventListener('HTMLImportsLoaded', function() {
+      I18nMsg.lang = 'es';
+      // I18nMsg.url = 'locales'; // optionally use custom folder for locales.
+      Platform.performMicrotaskCheckpoint();
+    });
+
+<b>Note:</b> this is done in `HTMLImportsLoaded` so `I18nMsg` will be defined by
+the time you set `I18nMsg.lang`. This timing is necessary under the polyfill and is
+<b>not needed if the browser supports HTML Imports</b>, natively.
+
+<b>Note:</b> you must call `Platform.performMicrotaskCheckpoint()` whenever
+making a change to the `I18nMsg` object. This is required due to the removal
+of `Object.observe()`.
+
+### Message files
+
+Setting a language instructs `<i18n-msg>` to read message ids from a predefined
+file on your server. For example, `I18nMsg.lang = 'es'` will use `locales/es.json`.
+`I18nMsg.lang = 'fr'` would use message strings from `locales/fr.json`.
+
+The directory name can be configured by using the `messagesUrl` property, but the file
+cannot. `<i18n-msg>` will always attempt to use messages from `<messagesUrl>/<LANG_YOU_SET>.json`.
+You can also set and/or change this location globally, at any time, by setting `I18nMsg.url`.
+
+<b>Example</b> - using a custom locales folder, setting it globally for all `<i18n-msg>` instances:
+
+    I18nMsg.url = 'locales';
+
+<b>Example</b> - set locales folder path on individual element:
+
+    <i18n-msg messages-url="path/to/locales">fallback text</i18n-msg>
+
+<b>Note:</b> message files are read once and reused for all instances of `<i18n-msg>`.
+
+### Fallback text
+
+If an appropriate message file can't be found, the `textContent` of the element is used as fallback text.
+
+    <i18n-msg msgid="unknownmsgid">fallback text</i18n-msg>
+
+### Placeholders
+ 
+ It's possible to insert text within the message which requires no translation (e.g: names, dates, numbers).
+ To make available the use of placeholders the message must contain placeholders in Chrome.i18n format ($name$) whenever a parameter
+ should be used, and to use these add the attribute "placeholders" having value array. Example:
+
+    "error": {
+        "message": "Error: $details$",
+        "description": "Generic error template. Expects error parameter to be passed in.",
+        "placeholders": {
+            "details": {
+                "content": "$1",
+                "example": "Failed to fetch RSS feed."
+            }
+       }
+    }
+
+
+    <i18-msg msgid="error" placeholders='["Failed to fetch data."]'></i18n-msg>
+
+ It's also possible to use {{}} and [[]] within the placeholders.
+
+### Full example
+
+    <html lang="es">
+      ...
+      <body>
+        <p>"Days" in Spanish is <i18n-msg msgid="days">days</i18n-msg>!</p>
+        <script>
+          I18nMsg.lang = document.documentElement.lang || 'en';
+        </script>
+      </body>
+    </html>
+
+### Getting a message:
+
+    // No argument returns the instance's message:
+    document.querySelector('i18n-msg').getMsg();
+
+    // Get a message by an id:
+    document.querySelector('i18n-msg').getMsg('days');
+ 
+@demo
+-->
+<dom-module id="oe-i18n-msg"></dom-module>
+<script>
+(function () {
+
+  Polymer({
+    is: 'oe-i18n-msg',
+
+    behaviors: [i18nMsgBehavior],
+
+    properties: {
+      /**
+       * The message id (key) for this message.
+       */
+      msgid: {
+        type: String,
+        value: null,
+        observer: '_updateMessages'
+      },
+
+      /**
+       * The message in the current locale
+       */
+      msg: {
+        type: String,
+        value: null,
+        notify: true
+      },
+       /**
+        * Placeholders used to insert within the message if it contains replacement
+        * patterns to switch with. To use this feature you must include the "placeholders"
+        * attribute and use '' for the array and "" for each element.
+        * Example: placeholders = '["John Doe","Seattle"]'
+        */
+       placeholders: {
+         type: Object,
+         value: function() {
+             return [];
+         },
+         observer: '_placeholdersChanged'
+       },
+    },
+
+    /**
+     * Returns a message in the current locale (set by `window.I18nMsg.lang`).
+     * @method getMsg
+     * @param {string=} opt_msgId Optional message id to lookup. If left off,
+     * the instance's `msgid` property is used.
+     * @return {string|null} Translated message or `null` if not found.
+     */
+    getMsg: function(opt_msgId) {
+      var msgId = opt_msgId || this.msgid;
+      var msg = this._parentGetMsg(msgId);
+
+      return msg;
+    },
+    getInterpolatedMsg: function(opt_msgId,opt_placeholders) {
+        return this._getInterpolatedMsg(opt_msgId,opt_placeholders);
+    },
+    _placeholdersChanged: function() {
+      if(typeof this.placeholders === 'string'){
+        this.placeholders = JSON.parse(this.placeholders);
+        return;//let above set call placeholdersChanged again.
+      }
+      if (this.language && this.locales[this.language] && this.placeholders) {
+        this._updateMessages(this);
+      }
+    },
+    _getInterpolatedMsg: function(messageId,phData) {
+      var self = this;
+      var msgObj;
+      messageId = messageId || self.msgid;
+      if (self.locales && self.locales[self.language]) {
+        msgObj = self.locales[self.language][messageId];
+      }
+      if(!msgObj && I18nMsg.defaults){
+        msgObj = I18nMsg.defaults[messageId];
+      }
+        if (msgObj && msgObj.message) {
+          var message = msgObj.message;
+          var placeholders = msgObj.placeholders;
+          phData = phData || self.placeholders;
+          if (placeholders && phData && phData instanceof Array) {
+            var content, pos;
+            for (var p in placeholders) {
+              content = placeholders[p].content;
+              if (content[0] == '$') {
+                pos = content.substring(1, content.length);
+                if (!isNaN(pos)) {
+                  content = (phData.length < pos) ? '' : phData[pos - 1];
+                }
+              }
+              message = message.split('$' + p + '$').join(content);
+            }
+          } else if(phData) {
+            var placeholders = message.match(/\$\w+\$/g);
+            placeholders && placeholders.forEach(function(item){
+                if(item.startsWith('$_')){
+                    var itemValue = phData[item.substr(2,item.length-3)]; //item=$_label$ -> itemValue='firstName'
+                    var translation = self.locales[self.language][itemValue] || itemValue;
+                    translation = (translation && translation.message)?translation.message:itemValue;
+                    message = message.split(item).join(translation);
+                } else {
+                    message = message.split(item).join(phData[item.substr(1,item.length-2)]);
+                }
+            });
+          }
+          return message;
+        }
+      return null;
+    },
+    _updateMessages: function() {
+//      if (this.locales && this.locales[this.language]) {
+//        if (!this.msgid in this.locales[this.language]) {
+//          console.warn(this.localName + ': "' + this.msgid + '" message id was not found in ' + url);
+//          return;
+//        }
+        if(this.isAttached){ //IE invalid-argument error fix.
+            var message = this._getInterpolatedMsg();
+            if(message) {  
+              this.msg = message;
+              this.innerHTML = message;
+            }
+        }
+//      }
+    },
+    attached: function() {
+      var msg = this._getInterpolatedMsg();
+      if (msg) {
+        this.msg = msg;
+        this.innerHTML = msg;
+      }
+    }
+
+  });
+})();
+</script>

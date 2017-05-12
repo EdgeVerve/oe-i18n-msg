@@ -1,0 +1,28 @@
+{
+  "days": {
+    "description": "...",
+    "message": "días"
+  },
+  "hours": {
+    "description": "...",
+    "message": "horas"
+  },
+  "minutes": {
+    "description": "...",
+    "message": "minutos"
+  },
+  "welcome": {
+    "description": "...",
+    "message": "Bienvenido $name$ al mundo de la i18n $feature$",
+    "placeholders":{
+      "name":{
+        "content":"$1",
+        "example":"John"
+      },
+      "feature":{
+        "content":"$2",
+        "example":"Placeholders"
+      }
+    }    
+  }
+}
