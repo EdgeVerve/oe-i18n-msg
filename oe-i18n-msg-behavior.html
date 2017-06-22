@@ -2,12 +2,12 @@
 <link rel="import" href="observer.html">
 
 <!--
-`<i18n-msg-behavior>` allows adding the i18n functionality via polymer behavior.
+`<oe-i18n-msg-behavior>` allows adding the i18n functionality via polymer behavior.
 -->
 <script>
   (function () {
 
-    window.I18nMsg = window.I18nMsg || {
+    window.OEi18nMsg = window.OEi18nMsg || {
       lang: null,
       url: 'locales',
       locales: {},
@@ -31,15 +31,15 @@
     var _numInstancesUpdated = 0;
 
     /**
-     * `<i18n-msg-behavior>` allows adding the i18n functionality via polymer
+     * `<oe-i18n-msg-behavior>` allows adding the i18n functionality via polymer
      * behavior.
      *
-     * See the `<i18n-msg>` documentation for site configuration and language
+     * See the `<oe-i18n-msg>` documentation for site configuration and language
      * options.
      *
      * ### Example
      *
-     * To use the `<i18n-msg-behavior>` add the behavior to the behaviors of the
+     * To use the `<oe-i18n-msg-behavior>` add the behavior to the behaviors of the
      * element. Use the `i18n` property to get the message, by default all keys
      * of the first locale file are filled in the property.
      *
@@ -48,7 +48,7 @@
      *
      *     Polymer({
      *       ...
-     *       behaviors: [i18nMsgBehavior],
+     *       behaviors: [OEi18nMsgBehavior],
      *
      *       properties: {
      *         i18n: {
@@ -73,16 +73,16 @@
      * `init` call to the ready function to trigger the i18n:
      *
      *     ready: function() {
-     *       this.init(window.I18nMsg);
+     *       this.init(window.OEi18nMsg);
      *     }
      * @polymerBehavior
      * @demo
      */
-    i18nMsgBehavior = {
+    OEi18nMsgBehavior = {
       /**
-       * The `i18n-language-ready` is fired after the locale was fetched and all `<i18n-msg>` elements were updated.
+       * The `oe-i18n-language-ready` is fired after the locale was fetched and all `<oe-i18n-msg>` elements were updated.
        *
-       * @event i18n-language-ready
+       * @event oe-i18n-language-ready
        * @detail {{language: String}}
        */
       properties: {
@@ -99,7 +99,7 @@
 
         /**
          * The folder name where the localized `<lang>.json` files are located.
-         * Overrides `window.I18nMsg.url` if not `null`.
+         * Overrides `window.OEi18nMsg.url` if not `null`.
          */
         messagesUrl: {
           type: String,
@@ -123,22 +123,22 @@
         }
       },
 
-      init: function(I18nMsg) {
-        this.I18nMsg = I18nMsg;
-        this.messagesUrl = this.I18nMsg.url;
-        this._setLanguage(this.I18nMsg.lang);
+      init: function(OEi18nMsg) {
+        this.OEi18nMsg = OEi18nMsg;
+        this.messagesUrl = this.OEi18nMsg.url;
+        this._setLanguage(this.OEi18nMsg.lang);
 
-        // Have instances observe window.I18nMsg.lang changes
+        // Have instances observe window.OEi18nMsg.lang changes
         // and go fetch the localized messages.json file.
-        var observerLang = new PathObserver(this.I18nMsg, 'lang');
+        var observerLang = new PathObserver(this.OEi18nMsg, 'lang');
         observerLang.open(function(newValue, oldValue) {
           _numInstancesUpdated = 0;
           this._setLanguage(newValue);
         }.bind(this));
 
-        // Have instances observe window.I18nMsg.url changes
+        // Have instances observe window.OEi18nMsg.url changes
         // and go fetch the localized messages.json file.
-        var observerUrl = new PathObserver(this.I18nMsg, 'url');
+        var observerUrl = new PathObserver(this.OEi18nMsg, 'url');
         observerUrl.open(function(newValue, oldValue) {
           _numInstancesUpdated = 0;
           this.messagesUrl = newValue;
@@ -155,7 +155,7 @@
       },
 
       /**
-       * Returns a message in the current locale (set by `window.I18nMsg.lang`).
+       * Returns a message in the current locale (set by `window.OEi18nMsg.lang`).
        * @method parentGetMsg
        * @param {string=} opt_msgId Optional message id to lookup.
        * @return {string|null} Translated message or `null` if not found.
@@ -177,7 +177,7 @@
         if (this.language && this.locales[this.language] && !_fetching) {
           // Send one signal that language changed to outside.
           if (_numInstancesUpdated == _instances.length - 1) {
-            this.fire('i18n-language-ready', {language: this.language});
+            this.fire('oe-i18n-language-ready', {language: this.language});
           }
 
           this._updateMessages();
@@ -215,7 +215,7 @@
 
           this._notifyInstances();
 
-          this.fire('i18n-language-ready', {language: this.language});
+          this.fire('oe-i18n-language-ready', {language: this.language});
         }.bind(this);
         xhr.onerror = function(e) {
           _fetching = false;
@@ -225,14 +225,14 @@
 
       _notifyInstances: function() {
         for (var i = 0, instance; instance = _instances[i]; ++i) {
-          instance._setLanguage(this.I18nMsg.lang);
+          instance._setLanguage(this.OEi18nMsg.lang);
           instance.locales[this.language] = this.locales[this.language];
           instance._updateMessages();
         }
       },
 
       ready: function() {
-        this.init(window.I18nMsg);
+        this.init(window.OEi18nMsg);
       },
 
       _setMsgs: function(msgid) {
@@ -240,7 +240,7 @@
         if (msg) {
           this.set('i18n.' + msgid, msg);
         } else {
-          console.warn(this.language + ': "' + msgid + '" message id was not found in ' + this.I18nMsg.url);
+          console.warn(this.language + ': "' + msgid + '" message id was not found in ' + this.OEi18nMsg.url);
         }
      },
 

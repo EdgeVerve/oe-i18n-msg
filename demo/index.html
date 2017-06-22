@@ -3,18 +3,18 @@
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>i18n-msg element Demo</title>
+  <title>oe-i18n-msg element Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="../i18n-msg.html">
-  <link rel="import" href="i18n-msg-behavior-example.html">
+  <link rel="import" href="../oe-i18n-msg.html">
+  <link rel="import" href="oe-i18n-msg-behavior-example.html">
 </head>
 <body>
 
-<p>"Days" in selected language is: <b><i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
-<p>"Hours" in selected language is: <b><i18n-msg msgid="hours">PLACEHOLDER_STRING</i18n-msg></b>!</p>
-<p>"Minutes" in selected language is: <b><i18n-msg msgid="minutes">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+<p>"Days" in selected language is: <b><oe-i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
+<p>"Hours" in selected language is: <b><oe-i18n-msg msgid="hours">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
+<p>"Minutes" in selected language is: <b><oe-i18n-msg msgid="minutes">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
 
-<p>Example fallback text when a message id isn't found: <i18n-msg msgid="UNKNOWN_MSG_ID">PLACEHOLDER_STRING</i18n-msg></b></p>
+<p>Example fallback text when a message id isn't found: <oe-i18n-msg msgid="UNKNOWN_MSG_ID">PLACEHOLDER_STRING</oe-i18n-msg></b></p>
 
 <select id="selector">
   <option selected>en</option>
@@ -26,11 +26,11 @@
 <p>Example of updating an attribute with getMsg() method: <input id="input" placeholder="Days"></p>
 
 <template is="dom-bind">
-  <i18n-msg msgid="days" msg="{{days}}"></i18n-msg>
+  <oe-i18n-msg msgid="days" msg="{{days}}"></oe-i18n-msg>
   <p>Example of updating an attribute: <input id="input" placeholder="[[days]]"></p>
      
   <p>Example of placeholders:</p>
-  <i18n-msg msgid="welcome" placeholders='["John","Placeholders"]'>Default Welcome Message</i18n-msg>
+  <oe-i18n-msg msgid="welcome" placeholders='["John","Placeholders"]'>Default Welcome Message</oe-i18n-msg>
     
 </template>
 
@@ -46,21 +46,21 @@
 
   // Event is only needed when running under the HTMLImports polyfill.
   document.addEventListener('HTMLImportsLoaded', function() {
-    I18nMsg.lang = selector.value || document.documentElement.lang || 'en';
+    OEi18nMsg.lang = selector.value || document.documentElement.lang || 'en';
     Platform.performMicrotaskCheckpoint();
   });
 
   selector.addEventListener('change', function() {
     document.documentElement.lang = this.value;
-    I18nMsg.lang = this.value;
+    OEi18nMsg.lang = this.value;
     Platform.performMicrotaskCheckpoint();
   });
 
-  document.addEventListener('i18n-language-ready', function(e) {
+  document.addEventListener('oe-i18n-language-ready', function(e) {
     var daysMsgEl = document.querySelector('#daysMsgEl');
     input.placeholder = daysMsgEl.getMsg(daysMsgEl.msgid);
 
-    var el = document.createElement('i18n-msg');
+    var el = document.createElement('oe-i18n-msg');
     el.msgid = 'minutes';
     document.querySelector('#dynamic').appendChild(el);
   });
@@ -68,9 +68,9 @@
 
 
 
-<p>Example of an element using the <code>i18n-msg-behavior</code>:</p>
+<p>Example of an element using the <code>oe-i18n-msg-behavior</code>:</p>
 
-<i18n-msg-behavior-example></i18n-msg-behavior-example>
+<oe-i18n-msg-behavior-example></oe-i18n-msg-behavior-example>
 
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
