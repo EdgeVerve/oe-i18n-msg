@@ -167,39 +167,39 @@ If an appropriate message file can't be found, the `textContent` of the element 
         msgObj = self.locales[self.language][messageId];
       }
       if(!msgObj && OEi18nMsg.defaults){
-        msgObj = OEi18nMsg.defaults[messageId];
+        msgObj = OEi18nMsg.defaults[messageId] || {message: messageId};
       }
-        if (msgObj && msgObj.message) {
-          var message = msgObj.message;
-          var placeholders = msgObj.placeholders;
-          phData = phData || self.placeholders;
-          if (placeholders && phData && phData instanceof Array) {
-            var content, pos;
-            for (var p in placeholders) {
-              content = placeholders[p].content;
-              if (content[0] == '$') {
-                pos = content.substring(1, content.length);
-                if (!isNaN(pos)) {
-                  content = (phData.length < pos) ? '' : phData[pos - 1];
-                }
+      if (msgObj && msgObj.message) {
+        var message = msgObj.message;
+        var placeholders = msgObj.placeholders;
+        phData = phData || self.placeholders;
+        if (placeholders && phData && phData instanceof Array) {
+          var content, pos;
+          for (var p in placeholders) {
+            content = placeholders[p].content;
+            if (content[0] == '$') {
+              pos = content.substring(1, content.length);
+              if (!isNaN(pos)) {
+                content = (phData.length < pos) ? '' : phData[pos - 1];
               }
-              message = message.split('$' + p + '$').join(content);
             }
-          } else if(phData) {
-            var placeholders = message.match(/\$\w+\$/g);
-            placeholders && placeholders.forEach(function(item){
-                if(item.startsWith('$_')){
-                    var itemValue = phData[item.substr(2,item.length-3)]; //item=$_label$ -> itemValue='firstName'
-                    var translation = self.locales[self.language][itemValue] || itemValue;
-                    translation = (translation && translation.message)?translation.message:itemValue;
-                    message = message.split(item).join(translation);
-                } else {
-                    message = message.split(item).join(phData[item.substr(1,item.length-2)]);
-                }
-            });
+            message = message.split('$' + p + '$').join(content);
           }
-          return message;
+        } else if(phData) {
+          var placeholders = message.match(/\$\w+\$/g);
+          placeholders && placeholders.forEach(function(item){
+              if(item.startsWith('$_')){
+                  var itemValue = phData[item.substr(2,item.length-3)]; //item=$_label$ -> itemValue='firstName'
+                  var translation = self.locales[self.language][itemValue] || itemValue;
+                  translation = (translation && translation.message)?translation.message:itemValue;
+                  message = message.split(item).join(translation);
+              } else {
+                  message = message.split(item).join(phData[item.substr(1,item.length-2)]);
+              }
+          });
         }
+        return message;
+      }
       return null;
     },
     _updateMessages: function() {
