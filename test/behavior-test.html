@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -15,6 +16,7 @@
   <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../demo/oe-i18n-msg-behavior-example.html">
 </head>
+
 <body>
 
   <test-fixture id="oe-i18n-msg-behavior-element-wp">
@@ -34,24 +36,33 @@
     var OEi18nMsgBehaviorElementWp;
     var OEi18nMsgBehaviorElement;
 
-    setup(function() {
-      OEi18nMsgBehaviorElement = fixture('oe-i18n-msg-behavior-element');
-      OEi18nMsgBehaviorElementWp = fixture('oe-i18n-msg-behavior-element-wp');
-    });
-
+    var OEi18nMsg = window.OEi18nMsg || {};
     OEi18nMsg.lang = 'es';
     OEi18nMsg.url = '../demo/locales';
 
-    suite('<oe-i18n-msg-behavior-element-wp>', function() {
-      test('Day property is setted', function(done) {
-        flush(function() {
+    suite('<oe-i18n-msg-behavior-element-wp>', function () {
+      OEi18nMsgBehaviorElementWp = fixture('oe-i18n-msg-behavior-element-wp');
+
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(OEi18nMsgBehaviorElementWp.locales).length, 0);
+          OEi18nMsgBehaviorElementWp.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        OEi18nMsgBehaviorElementWp.addEventListener('oe-i18n-language-ready', elReady);
+        OEi18nMsgBehaviorElementWp._fetchLanguage();
+      });
+
+      test('Day property is setted', function (done) {
+        flush(function () {
           var h1 = OEi18nMsgBehaviorElementWp.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
       });
-      test('Hours property is setted', function(done) {
-        flush(function() {
+
+      test('Hours property is setted', function (done) {
+        flush(function () {
           var span = OEi18nMsgBehaviorElementWp.querySelector('span').textContent;
           assert.equal(span, 'horas');
           done();
@@ -59,16 +70,30 @@
       });
     });
 
-    suite('<oe-i18n-msg-behavior>', function() {
-      test('Day property is setted', function(done) {
-        flush(function() {
+    suite('<oe-i18n-msg-behavior>', function () {
+      OEi18nMsgBehaviorElement = fixture('oe-i18n-msg-behavior-element');
+
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(OEi18nMsgBehaviorElement.locales).length, 0);
+          OEi18nMsgBehaviorElement.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        OEi18nMsgBehaviorElement.addEventListener('oe-i18n-language-ready', elReady);
+        OEi18nMsgBehaviorElement._fetchLanguage();
+      });
+
+      test('Day property is setted', function (done) {
+        flush(function () {
           var h1 = OEi18nMsgBehaviorElement.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
+
       });
-      test('Hours property is not setted', function(done) {
-        flush(function() {
+
+      test('Hours property is not setted', function (done) {
+        flush(function () {
           var span = OEi18nMsgBehaviorElement.querySelector('span').textContent;
           assert.equal(span, '');
           done();
@@ -77,4 +102,5 @@
     });
   </script>
 </body>
+
 </html>

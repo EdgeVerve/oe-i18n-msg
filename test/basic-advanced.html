@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -14,6 +15,7 @@
   <!-- Step 1: import the element to test -->
   <link rel="import" href="../oe-i18n-msg.html">
 </head>
+
 <body>
 
   <test-fixture id="fixture">
@@ -26,11 +28,11 @@
             messages-url="path/to/locales">PLACEHOLDER_STRING</oe-i18n-msg> -->
 
   <script>
-
+    var OEi18nMsg = window.OEi18nMsg || {};
     // OEi18nMsg.lang = 'fr';
     OEi18nMsg.url = '../demo/locales';
 
-    suite('<oe-i18n-element> advanced', function() {
+    suite('<oe-i18n-element> advanced', function () {
 
       var el = fixture('fixture');
 
@@ -45,20 +47,28 @@
       //   });
       // });
 
-      test('Updating OEi18nMsg.lang', function(done) {
+      test('Updating OEi18nMsg.lang', function (done) {
 
         OEi18nMsg.lang = 'fr'; // document.documentElement.lang = 'fr';
         Platform.performMicrotaskCheckpoint();
 
-        setTimeout(function() {
+        var elReady = function () {
           assert.equal(el.textContent, 'journées');
+          el.removeEventListener('oe-i18n-language-ready', elReady);
           done();
-        }, 10);
+        };
+
+        el.addEventListener('oe-i18n-language-ready', elReady);
+
+        // setTimeout(function() {
+        //   assert.equal(el.textContent, 'journées');
+        //   done();
+        // }, 100);
 
       });
 
     });
   </script>
-
 </body>
+
 </html>

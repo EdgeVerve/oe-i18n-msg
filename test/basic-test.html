@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -8,12 +9,13 @@
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
-
-  <link rel="import" href="../../test-fixture/test-fixture.html">
+  
+  <link rel="import" href="../../test-fixture/test-fixture.html" />
 
   <!-- Step 1: import the element to test -->
-  <link rel="import" href="../oe-i18n-msg.html">
+  <link rel="import" href="../oe-i18n-msg.html" />
 </head>
+
 <body>
 
   <test-fixture id="fixture1">
@@ -27,7 +29,7 @@
       <oe-i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</oe-i18n-msg>
     </template>
   </test-fixture>
-  
+
   <test-fixture id="fixture3">
     <template>
       <oe-i18n-msg msgid="welcome" id="welcome" placeholders='["Shane","Messages"]'>PLACEHOLDER_STRING</oe-i18n-msg>
@@ -36,52 +38,62 @@
 
   <test-fixture id="fixture4">
     <template>
-      <oe-i18n-msg msgid="welcome" id="welcome" placeholders='{"name":"Shane","feature":"Messages"}'>PLACEHOLDER_STRING</oe-i18n-msg>
+      <oe-i18n-msg msgid="welcome" id="welcome2" placeholders='{"name":"Shane","feature":"Messages"}'>PLACEHOLDER_STRING</oe-i18n-msg>
     </template>
   </test-fixture>
 
   <script>
+    window.OEi18nMsg = window.OEi18nMsg || {};
+    window.OEi18nMsg.lang = 'es';
+    window.OEi18nMsg.url = '../demo/locales';
 
-    OEi18nMsg.lang = 'es';
-    OEi18nMsg.url = '../demo/locales';
-
-    suite('<oe-i18n-element>', function() {
+    suite('oe-i18n-element basic', function () {
       var el = fixture('fixture1');
       var expected = 'días';
 
-      test('defines the "msgid" property', function() {
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
+      });
+
+      test('defines the "msgid" property', function () {
         assert.equal(el.msgid, 'days');
       });
 
-      test('getMsg() correctly returns', function() {
+      test('getMsg() correctly returns', function () {
         assert.equal(el.getMsg(el.msgid), expected);
         assert.equal(el.getMsg('hours'), 'horas');
         assert.equal(el.getMsg(), expected); // no args returns instance's message
       });
 
-      test('msg property is correctly setted', function() {
+      test('msg property is correctly setted', function () {
         assert.equal(el.msg, expected);
       });
 
-      test('.language property matches OEi18nMsg.lang', function() {
-        assert.equal(el.language, OEi18nMsg.lang);
+      test('.language property matches OEi18nMsg.lang', function () {
+        assert.equal(el.language, window.OEi18nMsg.lang);
       });
 
-      test('.language property is readOnly', function() {
+      test('.language property is readOnly', function () {
         var val = 'bogus';
         el.language = val;
         assert.notEqual(el.language, val);
       });
 
-      test('.textContent was updated to localize message', function() {
+      test('.textContent was updated to localize message', function () {
         assert.equal(el.textContent, expected);
       });
 
-      test('.locales property was populated', function() {
-        assert.isTrue(OEi18nMsg.lang in el.locales);
+      test('.locales property was populated', function () {
+        assert.isTrue(window.OEi18nMsg.lang in el.locales);
       });
 
-      test('attribute replaced', function() {
+      test('attribute replaced', function () {
         var input = document.createElement('input');
         input.placeholder = el.getMsg(el.msgid);
         assert.equal(input.placeholder, expected);
@@ -89,49 +101,78 @@
 
     });
 
-    suite('<oe-i18n-element> other', function() {
+    suite('<oe-i18n-element> other', function () {
       var el = fixture('fixture2');
 
-      test('an unknown message id is not replaced', function() {
-        assert.equal(el.textContent, 'PLACEHOLDER_STRING');
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
       });
 
-      test('dynamically created oe-i18n-msg', function() {
-        var el2 = document.createElement('oe-i18n-msg');
-        el2.msgid = 'minutes';
-        assert.equal(el2.textContent, 'minutos');
+      test('an unknown message id is not replaced', function () {
+        assert.equal(el.textContent, 'UNKNOWN_MSG_ID');
+      });
+
+      test('dynamically created oe-i18n-msg', function () {
+        el.msgid = 'minutes';
+        assert.equal(el.getMsg(), 'minutos');
       });
 
     });
 
-    suite('<oe-i18n-element> placeholders arrays', function() {
+    suite('<oe-i18n-element> placeholders arrays', function () {
       var el = fixture('fixture3');
 
-      test('uses placeholders', function() {
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
+      });
+
+      test('uses placeholders', function () {
         assert.equal(el.textContent, 'Bienvenido Shane al mundo de la i18n Messages');
       });
 
-      test('updates message when placeholders change', function() {
-        el.set('placeholders',["John","Placeholders"]);
-        assert.equal(el.textContent, 'Bienvenido John al mundo de la i18n Placeholders');
+      test('updates message when placeholders change', function () {
+        el.set('placeholders', ["John", "Placeholders"]);
+        assert.equal(el.getInterpolatedMsg(), 'Bienvenido John al mundo de la i18n Placeholders');
       });
 
     });
-      
-    suite('<oe-i18n-element> placeholders objects', function() {
+
+    suite('<oe-i18n-element> placeholders objects', function () {
       var el = fixture('fixture4');
 
-      test('uses placeholders', function() {
+      test('Initial data check', function (done) {
+        var elReady = function () {
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
+          done();
+        };
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
+      });
+
+      test('uses placeholders', function () {
         assert.equal(el.textContent, 'Bienvenido Shane al mundo de la i18n Messages');
       });
 
-      test('updates message when placeholders change', function() {
-        el.set('placeholders',{"name":"Alice","feature":"Placeholders"});
-        assert.equal(el.textContent, 'Bienvenido Alice al mundo de la i18n Placeholders');
+      test('updates message when placeholders change', function () {
+        el.set('placeholders', { "name": "Alice", "feature": "Placeholders" });
+        assert.equal(el.getInterpolatedMsg(), 'Bienvenido Alice al mundo de la i18n Placeholders');
       });
 
     });      
   </script>
-
 </body>
+
 </html>
