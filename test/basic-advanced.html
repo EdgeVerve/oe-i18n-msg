@@ -34,7 +34,10 @@
 
     suite('<oe-i18n-element> advanced', function () {
 
-      var el = fixture('fixture');
+      var el;
+      setup(function(){
+        el = fixture('fixture');        
+      });
 
       // test('messagesUrl is overridden by OEi18nMsg.url', function() {
       //   assert.equal(el.messagesUrl, 'path/to/locales');

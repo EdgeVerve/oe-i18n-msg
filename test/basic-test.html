@@ -48,7 +48,11 @@
     window.OEi18nMsg.url = '../demo/locales';
 
     suite('oe-i18n-element basic', function () {
-      var el = fixture('fixture1');
+      var el;
+      setup(function(){
+        el = fixture('fixture1');        
+      });
+
       var expected = 'días';
 
       test('Initial data check', function (done) {
@@ -102,7 +106,10 @@
     });
 
     suite('<oe-i18n-element> other', function () {
-      var el = fixture('fixture2');
+      var el;
+      setup(function(){
+        el = fixture('fixture2');        
+      });
 
       test('Initial data check', function (done) {
         var elReady = function () {
@@ -115,7 +122,7 @@
       });
 
       test('an unknown message id is not replaced', function () {
-        assert.equal(el.textContent, 'UNKNOWN_MSG_ID');
+        assert.equal(el.textContent, 'PLACEHOLDER_STRING');
       });
 
       test('dynamically created oe-i18n-msg', function () {
@@ -126,7 +133,10 @@
     });
 
     suite('<oe-i18n-element> placeholders arrays', function () {
-      var el = fixture('fixture3');
+      var el;
+      setup(function(){
+        el = fixture('fixture3');        
+      });
 
       test('Initial data check', function (done) {
         var elReady = function () {
@@ -150,7 +160,10 @@
     });
 
     suite('<oe-i18n-element> placeholders objects', function () {
-      var el = fixture('fixture4');
+      var el;
+      setup(function(){
+        el = fixture('fixture4');        
+      });
 
       test('Initial data check', function (done) {
         var elReady = function () {

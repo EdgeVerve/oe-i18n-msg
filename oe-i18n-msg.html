@@ -167,7 +167,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
         msgObj = self.locales[self.language][messageId];
       }
       if(!msgObj && OEi18nMsg.defaults){
-        msgObj = OEi18nMsg.defaults[messageId] || {message: messageId};
+        msgObj = OEi18nMsg.defaults[messageId];/* || {message: messageId};*/
       }
       if (msgObj && msgObj.message) {
         var message = msgObj.message;
@@ -188,7 +188,9 @@ If an appropriate message file can't be found, the `textContent` of the element 
         } else if(phData) {
           var placeholders = message.match(/\$\w+\$/g);
           placeholders && placeholders.forEach(function(item){
-              if(item.startsWith('$_')){
+            /* IE Does not support startsWith */  
+            /*if(item.startsWith('$_')){*/
+              if(item[0]==='$' && item[1]==='_'){
                   var itemValue = phData[item.substr(2,item.length-3)]; //item=$_label$ -> itemValue='firstName'
                   var translation = self.locales[self.language][itemValue] || itemValue;
                   translation = (translation && translation.message)?translation.message:itemValue;
@@ -209,20 +211,15 @@ If an appropriate message file can't be found, the `textContent` of the element 
 //          return;
 //        }
         if(this.isAttached){ //IE invalid-argument error fix.
-            var message = this._getInterpolatedMsg();
-            if(message) {  
-              this.msg = message;
-              this.innerHTML = message;
-            }
+            var msg = this._getInterpolatedMsg() || this.defaultMsg || this.msgId;
+            this.msg = msg;
+            this.innerHTML = msg;
         }
 //      }
     },
     attached: function() {
-      var msg = this._getInterpolatedMsg();
-      if (msg) {
-        this.msg = msg;
-        this.innerHTML = msg;
-      }
+      this.defaultMsg = this.innerHTML;
+      this._updateMessages();
     }
 
   });

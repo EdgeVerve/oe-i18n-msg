@@ -33,29 +33,28 @@
 
   <script>
 
-    var OEi18nMsgBehaviorElementWp;
-    var OEi18nMsgBehaviorElement;
-
     var OEi18nMsg = window.OEi18nMsg || {};
     OEi18nMsg.lang = 'es';
     OEi18nMsg.url = '../demo/locales';
 
     suite('<oe-i18n-msg-behavior-element-wp>', function () {
-      OEi18nMsgBehaviorElementWp = fixture('oe-i18n-msg-behavior-element-wp');
-
+      var el;
+      setup(function(){
+        el = fixture('oe-i18n-msg-behavior-element-wp');
+      });
       test('Initial data check', function (done) {
         var elReady = function () {
-          assert.notEqual(Object.keys(OEi18nMsgBehaviorElementWp.locales).length, 0);
-          OEi18nMsgBehaviorElementWp.removeEventListener('oe-i18n-language-ready', elReady);
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
           done();
         };
-        OEi18nMsgBehaviorElementWp.addEventListener('oe-i18n-language-ready', elReady);
-        OEi18nMsgBehaviorElementWp._fetchLanguage();
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
       });
 
       test('Day property is setted', function (done) {
         flush(function () {
-          var h1 = OEi18nMsgBehaviorElementWp.querySelector('h1').textContent;
+          var h1 = el.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
@@ -63,7 +62,7 @@
 
       test('Hours property is setted', function (done) {
         flush(function () {
-          var span = OEi18nMsgBehaviorElementWp.querySelector('span').textContent;
+          var span = el.querySelector('span').textContent;
           assert.equal(span, 'horas');
           done();
         });
@@ -71,21 +70,24 @@
     });
 
     suite('<oe-i18n-msg-behavior>', function () {
-      OEi18nMsgBehaviorElement = fixture('oe-i18n-msg-behavior-element');
+      var el;
+      setup(function(){
+        el = fixture('oe-i18n-msg-behavior-element');
+      });
 
       test('Initial data check', function (done) {
         var elReady = function () {
-          assert.notEqual(Object.keys(OEi18nMsgBehaviorElement.locales).length, 0);
-          OEi18nMsgBehaviorElement.removeEventListener('oe-i18n-language-ready', elReady);
+          assert.notEqual(Object.keys(el.locales).length, 0);
+          el.removeEventListener('oe-i18n-language-ready', elReady);
           done();
         };
-        OEi18nMsgBehaviorElement.addEventListener('oe-i18n-language-ready', elReady);
-        OEi18nMsgBehaviorElement._fetchLanguage();
+        el.addEventListener('oe-i18n-language-ready', elReady);
+        el._fetchLanguage();
       });
 
       test('Day property is setted', function (done) {
         flush(function () {
-          var h1 = OEi18nMsgBehaviorElement.querySelector('h1').textContent;
+          var h1 = el.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
@@ -94,7 +96,7 @@
 
       test('Hours property is not setted', function (done) {
         flush(function () {
-          var span = OEi18nMsgBehaviorElement.querySelector('span').textContent;
+          var span = el.querySelector('span').textContent;
           assert.equal(span, '');
           done();
         });
