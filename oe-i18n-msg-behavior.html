@@ -27,7 +27,6 @@
     };
 
     var _instances = []; // Holds all i18n-msg elements to have them easily updated with translation messages.
-    var _fetching = false; // True if there's an outstanding XHR fetching a locale file.
     var _numInstancesUpdated = 0;
 
     /**
@@ -142,12 +141,6 @@
         observerUrl.open(function(newValue, oldValue) {
           _numInstancesUpdated = 0;
           this.messagesUrl = newValue;
-
-          // TODO: this will xhr the json file for each instance.
-          // if (!this.language || _fetching) {
-          //   return;
-          // }
-
           this._fetchLanguage();
         }.bind(this));
 
@@ -172,9 +165,11 @@
       },
 
       _languageChanged: function() {
-        // Don't fetch .json file if it has already been
-        // fetched or another instance is already trying to.
-        if (this.language && this.locales[this.language] && !_fetching) {
+        if(!this.language){
+          return;
+        }
+
+        if (this.language && this.locales[this.language]) {
           // Send one signal that language changed to outside.
           if (_numInstancesUpdated == _instances.length - 1) {
             this.fire('oe-i18n-language-ready', {language: this.language});
@@ -182,28 +177,28 @@
 
           this._updateMessages();
           _numInstancesUpdated++;
-
-          return;
-        } else if (!this.language || this.locales[this.language] || _fetching) {
-          return;
+        } else {
+          this._fetchLanguage();
         }
 
-        this._fetchLanguage();
       },
 
       _fetchLanguage: function() {
-        // if (_fetching) {
-        //   return;
-        // }
-
-        _fetching = true;
-
         var url = /*this.baseURI + */this.messagesUrl + '/' + this.language + '.json';
 
+        window.OEi18nMsg._loading = window.OEi18nMsg._loading || [];
+        if(window.OEi18nMsg._loading.indexOf(url)>=0){
+          //Somebody has already initiated this load.
+          return;
+        }
+        window.OEi18nMsg._loading.push(url);
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.onload = function(e) {
-          _fetching = false;
+          var index = window.OEi18nMsg._loading.indexOf(url);
+          if(index>=0) {
+            window.OEi18nMsg._loading.splice(index, 1);
+          }
 
           if (e.target.status !== 200 && e.target.status !== 0) {
             return;
@@ -218,7 +213,10 @@
           this.fire('oe-i18n-language-ready', {language: this.language});
         }.bind(this);
         xhr.onerror = function(e) {
-          _fetching = false;
+          var index = window.OEi18nMsg._loading.indexOf(url);
+          if(index>=0) {
+            window.OEi18nMsg._loading.splice(index, 1);
+          }
         }.bind(this);
         xhr.send();
       },
