@@ -213,12 +213,12 @@ If an appropriate message file can't be found, the `textContent` of the element 
         if(this.isAttached){ //IE invalid-argument error fix.
             var msg = this._getInterpolatedMsg() || this.defaultMsg || this.msgId;
             this.msg = msg;
-            this.innerHTML = msg;
+            this.textContent = msg;
         }
 //      }
     },
     attached: function() {
-      this.defaultMsg = this.innerHTML;
+      this.defaultMsg = this.textContent;
       this._updateMessages();
     }
 
