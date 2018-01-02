@@ -211,14 +211,14 @@ If an appropriate message file can't be found, the `textContent` of the element 
 //          return;
 //        }
         if(this.isAttached){ //IE invalid-argument error fix.
-            var msg = this._getInterpolatedMsg() || this.defaultMsg || this.msgId;
+            var msg = this._getInterpolatedMsg() || this.defaultMsg || this.msgid;
             this.msg = msg;
             this.textContent = msg;
         }
 //      }
     },
     attached: function() {
-      this.defaultMsg = this.textContent;
+      this.defaultMsg = this.textContent.trim();
       this._updateMessages();
     }
 
