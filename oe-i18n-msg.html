@@ -49,7 +49,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     <oe-i18n-msg msgid="unknownmsgid">fallback text</oe-i18n-msg>
 
 ### Placeholders
- 
+
  It's possible to insert text within the message which requires no translation (e.g: names, dates, numbers).
  To make available the use of placeholders the message must contain placeholders in Chrome.i18n format ($name$) whenever a parameter
  should be used, and to use these add the attribute "placeholders" having value array. Example:
@@ -89,7 +89,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     // Get a message by an id:
     document.querySelector('oe-i18n-msg').getMsg('days');
- 
+
 @demo
 -->
 <dom-module id="oe-i18n-msg"></dom-module>
@@ -175,7 +175,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
         phData = phData || self.placeholders;
         if (placeholders && phData && phData instanceof Array) {
           var content, pos;
-          for (var p in placeholders) {
+          Object.keys(placeholders).forEach(function(p) {
             content = placeholders[p].content;
             if (content[0] == '$') {
               pos = content.substring(1, content.length);
@@ -184,11 +184,11 @@ If an appropriate message file can't be found, the `textContent` of the element 
               }
             }
             message = message.split('$' + p + '$').join(content);
-          }
+          });
         } else if(phData) {
           var placeholders = message.match(/\$\w+\$/g);
           placeholders && placeholders.forEach(function(item){
-            /* IE Does not support startsWith */  
+            /* IE Does not support startsWith */
             /*if(item.startsWith('$_')){*/
               if(item[0]==='$' && item[1]==='_'){
                   var itemValue = phData[item.substr(2,item.length-3)]; //item=$_label$ -> itemValue='firstName'
