@@ -12,17 +12,17 @@
       url: 'locales',
       locales: {},
       defaults:{
-      'valueMissing':{message:'A value is required'},      
-      'rangeOverflow':{message:'Value is more than prescribed'},      
-      'rangeUnderflow':{message:'Value is less than prescribed'},      
-      'tooShort':{message:'Lengthen the value'},      
-      'tooLong':{message:'Shorten the value'},      
-      'patternMismatch':{message:'Value does not match prescribed pattern'},      
-      'numberFormat':{message:'Please enter a valid number'},      
-      'dateFormat':{message:'Please enter a valid date'},      
-      'record-created':{message:'Saved successfully'},      
-      'record-deleted':{message:'Deleted successfully'},      
-      'record-updated':{message:'Saved successfully'},      
+      'valueMissing':{message:'A value is required'},
+      'rangeOverflow':{message:'Value is more than prescribed'},
+      'rangeUnderflow':{message:'Value is less than prescribed'},
+      'tooShort':{message:'Lengthen the value'},
+      'tooLong':{message:'Shorten the value'},
+      'patternMismatch':{message:'Value does not match prescribed pattern'},
+      'numberFormat':{message:'Please enter a valid number'},
+      'dateFormat':{message:'Please enter a valid date'},
+      'record-created':{message:'Saved successfully'},
+      'record-deleted':{message:'Deleted successfully'},
+      'record-updated':{message:'Saved successfully'},
       }
     };
 
@@ -248,13 +248,13 @@
           if (Object.keys(this.i18n).length === 0) {
             var localesArray = Object.keys(this.locales);
             if (localesArray.length > 0) {
-              Object.keys(this.locales[localesArray[0]]).forEach(function(i18nKey) {
+              this.locales[localesArray[0]] && Object.keys(this.locales[localesArray[0]]).forEach(function(i18nKey) {
                 this.i18n[i18nKey] = '';
                 this._setMsgs(i18nKey);
               }.bind(this));
             }
           } else {
-            Object.keys(this.i18n).forEach(this._setMsgs.bind(this));
+            this.i18n && Object.keys(this.i18n).forEach(this._setMsgs.bind(this));
           }
         }
       }
