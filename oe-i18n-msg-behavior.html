@@ -1,7 +1,10 @@
-<!--
-  ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
-  Bangalore, India. All Rights Reserved.
--->
+<!-- ©2017-2018 EdgeVerve Systems Limited (a fully owned Infosys subsidiary), Bangalore, India. All Rights Reserved.
+The EdgeVerve proprietary software program ("Program"), is protected by copyrights laws, international treaties and other pending or existing intellectual property rights in India, the United States and other countries.
+The Program may contain/reference third party or open source components, the rights to which continue to
+remain with the applicable third party licensors or the open source community as the case may be and nothing
+here transfers the rights to the third party and open source components, except as expressly permitted.
+Any unauthorized reproduction, storage, transmission in any form or by any means (including without limitation to electronic, mechanical, printing, photocopying, recording or  otherwise), or any distribution of this Program,or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law. -->
+
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="observer.html">
@@ -17,17 +20,17 @@
       url: 'locales',
       locales: {},
       defaults:{
-      'valueMissing':{message:'A value is required'},      
-      'rangeOverflow':{message:'Value is more than prescribed'},      
-      'rangeUnderflow':{message:'Value is less than prescribed'},      
-      'tooShort':{message:'Lengthen the value'},      
-      'tooLong':{message:'Shorten the value'},      
-      'patternMismatch':{message:'Value does not match prescribed pattern'},      
-      'numberFormat':{message:'Please enter a valid number'},      
-      'dateFormat':{message:'Please enter a valid date'},      
-      'record-created':{message:'Saved successfully'},      
-      'record-deleted':{message:'Deleted successfully'},      
-      'record-updated':{message:'Saved successfully'},      
+      'valueMissing':{message:'A value is required'},
+      'rangeOverflow':{message:'Value is more than prescribed'},
+      'rangeUnderflow':{message:'Value is less than prescribed'},
+      'tooShort':{message:'Lengthen the value'},
+      'tooLong':{message:'Shorten the value'},
+      'patternMismatch':{message:'Value does not match prescribed pattern'},
+      'numberFormat':{message:'Please enter a valid number'},
+      'dateFormat':{message:'Please enter a valid date'},
+      'record-created':{message:'Saved successfully'},
+      'record-deleted':{message:'Deleted successfully'},
+      'record-updated':{message:'Saved successfully'},
       }
     };
 
@@ -253,13 +256,13 @@
           if (Object.keys(this.i18n).length === 0) {
             var localesArray = Object.keys(this.locales);
             if (localesArray.length > 0) {
-              Object.keys(this.locales[localesArray[0]]).forEach(function(i18nKey) {
+              this.locales[localesArray[0]] && Object.keys(this.locales[localesArray[0]]).forEach(function(i18nKey) {
                 this.i18n[i18nKey] = '';
                 this._setMsgs(i18nKey);
               }.bind(this));
             }
           } else {
-            Object.keys(this.i18n).forEach(this._setMsgs.bind(this));
+            this.i18n && Object.keys(this.i18n).forEach(this._setMsgs.bind(this));
           }
         }
       }

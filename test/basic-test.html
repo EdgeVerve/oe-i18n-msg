@@ -1,7 +1,10 @@
-<!--
-  ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
-  Bangalore, India. All Rights Reserved.
--->
+<!-- ©2017-2018 EdgeVerve Systems Limited (a fully owned Infosys subsidiary), Bangalore, India. All Rights Reserved.
+The EdgeVerve proprietary software program ("Program"), is protected by copyrights laws, international treaties and other pending or existing intellectual property rights in India, the United States and other countries.
+The Program may contain/reference third party or open source components, the rights to which continue to
+remain with the applicable third party licensors or the open source community as the case may be and nothing
+here transfers the rights to the third party and open source components, except as expressly permitted.
+Any unauthorized reproduction, storage, transmission in any form or by any means (including without limitation to electronic, mechanical, printing, photocopying, recording or  otherwise), or any distribution of this Program,or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law. -->
+
 
 <!doctype html>
 <html>
@@ -14,7 +17,7 @@
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
-  
+
   <link rel="import" href="../../test-fixture/test-fixture.html" />
 
   <!-- Step 1: import the element to test -->
@@ -55,7 +58,7 @@
     suite('oe-i18n-element basic', function () {
       var el;
       setup(function(){
-        el = fixture('fixture1');        
+        el = fixture('fixture1');
       });
 
       var expected = 'días';
@@ -113,7 +116,7 @@
     suite('<oe-i18n-element> other', function () {
       var el;
       setup(function(){
-        el = fixture('fixture2');        
+        el = fixture('fixture2');
       });
 
       test('Initial data check', function (done) {
@@ -140,7 +143,7 @@
     suite('<oe-i18n-element> placeholders arrays', function () {
       var el;
       setup(function(){
-        el = fixture('fixture3');        
+        el = fixture('fixture3');
       });
 
       test('Initial data check', function (done) {
@@ -167,7 +170,7 @@
     suite('<oe-i18n-element> placeholders objects', function () {
       var el;
       setup(function(){
-        el = fixture('fixture4');        
+        el = fixture('fixture4');
       });
 
       test('Initial data check', function (done) {
@@ -189,7 +192,7 @@
         assert.equal(el.getInterpolatedMsg(), 'Bienvenido Alice al mundo de la i18n Placeholders');
       });
 
-    });      
+    });
   </script>
 </body>
 
