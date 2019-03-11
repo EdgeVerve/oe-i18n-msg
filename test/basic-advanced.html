@@ -14,28 +14,29 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>oe-i18n-msg</title>
 
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-  <link rel="import" href="../../test-fixture/test-fixture.html">
 
   <!-- Step 1: import the element to test -->
-  <link rel="import" href="../oe-i18n-msg.html">
+  <script type="module" src="../oe-i18n-msg.js"></script>
 </head>
 
 <body>
 
-  <test-fixture id="fixture">
+  <test-fixture id="fixture-advanced">
     <template>
-      <oe-i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</oe-i18n-msg>
+      <oe-i18n-msg msgid="days" id="days"></oe-i18n-msg>
     </template>
   </test-fixture>
 
   <!-- <oe-i18n-msg msgid="days" id="days"
             messages-url="path/to/locales">PLACEHOLDER_STRING</oe-i18n-msg> -->
 
-  <script>
+  <script type="module">
     var OEi18nMsg = window.OEi18nMsg || {};
     // OEi18nMsg.lang = 'fr';
     OEi18nMsg.url = '../demo/locales';
@@ -44,37 +45,25 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       var el;
       setup(function(){
-        el = fixture('fixture');
+        el = fixture('fixture-advanced');
       });
-
-      // test('messagesUrl is overridden by OEi18nMsg.url', function() {
-      //   assert.equal(el.messagesUrl, 'path/to/locales');
-      // });
-
-      // test('oe-i18n-language-ready fires', function(done) {
-      //   el.addEventListener('oe-i18n-language-ready', function(e) {
-      //     assert.isTrue(true);
-      //     done();
-      //   });
-      // });
 
       test('Updating OEi18nMsg.lang', function (done) {
 
-        OEi18nMsg.lang = 'fr'; // document.documentElement.lang = 'fr';
-        Platform.performMicrotaskCheckpoint();
 
         var elReady = function () {
-          assert.equal(el.textContent, 'journées');
+          flush(function(){
+            assert.equal(el.textContent, 'journées');
+
+            done();
+          });
           el.removeEventListener('oe-i18n-language-ready', elReady);
-          done();
         };
 
         el.addEventListener('oe-i18n-language-ready', elReady);
+        OEi18nMsg.lang = 'fr'; // document.documentElement.lang = 'fr';
+        Platform.performMicrotaskCheckpoint();
 
-        // setTimeout(function() {
-        //   assert.equal(el.textContent, 'journées');
-        //   done();
-        // }, 100);
 
       });
 

@@ -1,20 +1,26 @@
-<!-- Copyright Eric Bidelman <ebidel@gmail.com> -->
-<!--
-  ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
-  Bangalore, India. All Rights Reserved.
--->
-
 <!doctype html>
 <html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>oe-i18n-msg element Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="../oe-i18n-msg.html">
-  <link rel="import" href="oe-i18n-msg-behavior-example.html">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
+    <title>oe-i18n-msg demo</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module">
+      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+      import '@polymer/iron-demo-helpers/demo-snippet';
+    </script>
+
+    <script type="module" src="../oe-i18n-msg.js"></script>
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
 <p>"Days" in selected language is: <b><oe-i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
 <p>"Hours" in selected language is: <b><oe-i18n-msg msgid="hours">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
 <p>"Minutes" in selected language is: <b><oe-i18n-msg msgid="minutes">PLACEHOLDER_STRING</oe-i18n-msg></b>!</p>
@@ -48,12 +54,19 @@
 <script>
   var selector = document.querySelector('#selector');
   var input = document.querySelector('#input');
-
+  var OEi18nMsg = window.OEi18nMsg || {
+    url:"locales",
+    lang:"en"
+  };
   // Event is only needed when running under the HTMLImports polyfill.
-  document.addEventListener('HTMLImportsLoaded', function() {
-    OEi18nMsg.lang = selector.value || document.documentElement.lang || 'en';
-    Platform.performMicrotaskCheckpoint();
-  });
+
+  if(document.documentElement){
+    OEi18nMsg.lang = document.documentElement.lang
+  }
+  //Platform.performMicrotaskCheckpoint();
+  document.addEventListener('load',function(ev){
+    console.log('loaded');
+  })
 
   selector.addEventListener('change', function() {
     document.documentElement.lang = this.value;
@@ -67,23 +80,10 @@
 
     var el = document.createElement('oe-i18n-msg');
     el.msgid = 'minutes';
-    document.querySelector('#dynamic').appendChild(el);
+    var container = document.querySelector('#dynamic');
+    container.innerHTML = "";
+    container.appendChild(el);
   });
 </script>
-
-
-
-<p>Example of an element using the <code>oe-i18n-msg-behavior</code>:</p>
-
-<oe-i18n-msg-behavior-example></oe-i18n-msg-behavior-example>
-
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
- ga('create', 'UA-43475701-1', 'ebidel.github.io');
- ga('send', 'pageview');
-</script>
-</body>
+  </body>
 </html>

@@ -1,13 +1,21 @@
-# oe-i18n-msg
+# \<oe-i18n-msg\>
 
-This component is an extension of [i18n-msg](http://evgit/evf/ev-i18n-msg) component.
+Custom element to do localization (i18n) message string replacement.
 
-`i18n-msg` is a custom element to do localization (i18n) message string replacement.
+## Install the Polymer-CLI
 
-See the [component page](https://ebidel.github.io/i18n-msg/) for more information.
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) and npm (packaged with [Node.js](https://nodejs.org)) installed. Run `npm install` to install your element's dependencies, then run `polymer serve` to serve your element locally.
 
-`oe-i18n-msg` provides placeholders support and some error messages.
+## Viewing Your Element
 
-```html
-<oe-i18n-msg msgid="days" id="days">Days</oe-i18n-msg>
 ```
+$ polymer serve
+```
+
+## Running Tests
+
+```
+$ polymer test
+```
+
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.

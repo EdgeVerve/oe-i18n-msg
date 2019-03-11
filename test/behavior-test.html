@@ -13,16 +13,19 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>oe-i18n-msg</title>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <!-- Step 1: import the element to test -->
-  <link rel="import" href="../oe-i18n-msg.html">
-  <link rel="import" href="../oe-i18n-msg-behavior.html">
-  <link rel="import" href="../../test-fixture/test-fixture.html">
-  <link rel="import" href="../demo/oe-i18n-msg-behavior-example.html">
+  <script type="module" src="../oe-i18n-msg.js"></script>
+  <script type="module" src="../oe-i18n-mixin.js"></script>
+  <script type="module">
+    import '../demo/oe-i18n-msg-behavior-example';
+  </script>
 </head>
 
 <body>
@@ -62,7 +65,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       test('Day property is setted', function (done) {
         flush(function () {
-          var h1 = el.querySelector('h1').textContent;
+          var h1 = el.shadowRoot.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
@@ -70,7 +73,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       test('Hours property is setted', function (done) {
         flush(function () {
-          var span = el.querySelector('span').textContent;
+          var span = el.shadowRoot.querySelector('span').textContent;
           assert.equal(span, 'horas');
           done();
         });
@@ -95,17 +98,17 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
       test('Day property is setted', function (done) {
         flush(function () {
-          var h1 = el.querySelector('h1').textContent;
+          var h1 = el.shadowRoot.querySelector('h1').textContent;
           assert.equal(h1, 'días');
           done();
         });
 
       });
 
-      test('Hours property is not setted', function (done) {
+      test('Hours property is setted', function (done) {
         flush(function () {
-          var span = el.querySelector('span').textContent;
-          assert.equal(span, '');
+          var span = el.shadowRoot.querySelector('span').textContent;
+          assert.equal(span, 'horas');
           done();
         });
       });
