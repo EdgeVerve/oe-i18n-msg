@@ -2,17 +2,17 @@
   "name": "oe-i18n-msg",
   "description": "Custom element to do localization (i18n) message string replacement.",
   "main": "oe-i18n-msg.js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "dependencies": {
-    "@polymer/polymer": "3.1.0",
+    "@polymer/polymer": "^3.1.0",
     "observe-js": "0.5.7"
   },
   "devDependencies": {
-    "@polymer/iron-component-page": "4.0.1",
+    "@polymer/iron-component-page": "^4.0.1",
     "fakerest": "2.1.0",
-    "@polymer/iron-demo-helpers": "3.0.2",
-    "@webcomponents/webcomponentsjs": "2.2.7",
-    "@polymer/test-fixture": "4.0.2",
+    "@polymer/iron-demo-helpers": "^3.0.2",
+    "@webcomponents/webcomponentsjs": "^2.2.7",
+    "@polymer/test-fixture": "^4.0.2",
     "axe-core": "3.1.2",
     "chai": "4.2.0",
     "mocha": "5.2.0",
