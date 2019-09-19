@@ -4,9 +4,8 @@
  * Bangalore, India. All Rights Reserved.
  */
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
-import 'observe-js/src/observe';
+import 'observe-js'; // Loads and sets window.PathObserver Global
 
-var PathObserver = window.PathObserver;
 window.OEi18nMsg = window.OEi18nMsg || {
     lang: null,
     url: 'locales',
