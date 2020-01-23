@@ -2,7 +2,7 @@
   "name": "oe-i18n-msg",
   "description": "Custom element to do localization (i18n) message string replacement.",
   "main": "oe-i18n-msg.js",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "dependencies": {
     "@polymer/polymer": "^3.1.0",
     "observe-js": "0.5.7"
